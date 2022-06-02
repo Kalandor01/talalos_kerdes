@@ -1,0 +1,1 @@
+A bronz láda mond igazat, mivel az azt jelenti, hogy az arany láda hazudik, és nem abban van a kincs, és így az ezüst láda is hazudik, és ezért abban van a kincs.
