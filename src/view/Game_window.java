@@ -1,26 +1,98 @@
 package view;
 
-import java.awt.Component;
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import modell.Chest;
-import modell.Game;
+import model.Chest;
+import model.Game;
 
 public class Game_window extends javax.swing.JFrame {
 
+    Game game = new Game();
+    Chest[] chests;
+    JButton[] chest_buttons;
+    boolean chances = true;
+    
     public Game_window() {
         initComponents();
         
-        Game game = new Game();
+        chest_buttons = make_chests();
+//        for (int x = 0; x < chest_buttons.length; x++)
+//        {
+//            System.out.println(chest_buttons[x]);
+//        }
+    }
+    
+    private JButton[] make_chests()
+    {
         Chest[] chests = game.getChests();
-        JPanel[] chest_panels = new JPanel[game.CHEST_NUM];
-        Component[] comps = chests_panel.getComponents();
-        for (int x = 0; x < comps.length; x++)
+        chests_panel.removeAll();
+        JButton[] chest_buttons = new JButton[chests.length];
+        for (int x = 0; x < chests.length; x++)
         {
-            try {
-                chest_panels[x] = (JPanel)(comps[x]);
-            } catch (Exception e){
-            }
+            //panel
+            JPanel chest_panel = new JPanel();
+            chest_panel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, chests[x].getName(), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+            chest_panel.setLayout(new java.awt.GridLayout());
+            //button
+            JButton chest = new JButton();
+            //img
+            ImageIcon img_raw = new ImageIcon(this.getClass().getResource(chests[x].getMaterial_image_path()));
+            ImageIcon img = new ImageIcon(img_raw.getImage().getScaledInstance(150, 100, Image.SCALE_DEFAULT));
+            chest.setIcon(img);
+            //text
+            chest.setText(chests[x].getRiddle());
+            chest.setHorizontalTextPosition(JButton.CENTER);
+            chest.setVerticalTextPosition(JButton.CENTER);
+            chest.setForeground(Color.BLACK);
+            //action
+            int chest_num = x;
+            chest.addActionListener((java.awt.event.ActionEvent evt) -> {
+                guess_chest(evt, chest_num);
+            });
+            //add
+            chest_panel.add(chest);
+            chest_buttons[x] = chest;
+            chests_panel.add(chest_panel);
         }
+        return chest_buttons;
+    }
+    
+    public void guess_chest(java.awt.event.ActionEvent evt, int chest_num)
+    {
+        chances = chances_bt.isSelected();
+        chances_bt.setEnabled(false);
+        if(game.guess(chest_num))
+            good_chest();
+        else
+            bad_chest(evt);
+    }
+    
+    public void good_chest()
+    {
+        int result = JOptionPane.showConfirmDialog(this, "Megtaláltad a kincset" + (chances ? (" " + game.getAttempts() +" próbálkozásból") : "") + ". Kilépsz?", "Nyertél!", JOptionPane.YES_NO_OPTION);
+        if(JOptionPane.YES_OPTION == result)
+            dispose();
+        else
+            for (JButton chest : chest_buttons)
+            {
+                chest.setEnabled(false);
+            }
+//        game.add_chest(new Chest("láda","hehe"));
+//        make_chests();
+        
+    }
+    
+    public void bad_chest(java.awt.event.ActionEvent evt)
+    {
+        JOptionPane.showMessageDialog(this, "Ez a láda üres volt.", "Vesztettél!", JOptionPane.ERROR_MESSAGE);
+        if(!chances)
+            dispose();
+        else
+            ((JButton)(evt.getSource())).setEnabled(false);
     }
 
     /**
@@ -32,148 +104,66 @@ public class Game_window extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        main_panel = new javax.swing.JPanel();
+        chances_bt = new javax.swing.JCheckBox();
         chests_panel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Találóskérdés");
+        setMinimumSize(new java.awt.Dimension(500, 300));
+        setPreferredSize(new java.awt.Dimension(750, 500));
 
-        chests_panel.setLayout(new java.awt.GridLayout());
+        chances_bt.setText("Több próbálkozás: ");
+        chances_bt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        chances_bt.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Arany láda"));
+        chests_panel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Csak az eggyik láda mond igazat.", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        chests_panel.setLayout(new java.awt.GridLayout(1, 0));
 
-        jButton1.setText("jButton1");
-
-        jLabel1.setText("jLabel1");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jButton1)))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout main_panelLayout = new javax.swing.GroupLayout(main_panel);
+        main_panel.setLayout(main_panelLayout);
+        main_panelLayout.setHorizontalGroup(
+            main_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(main_panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(47, 47, 47))
+                .addGroup(main_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chests_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chances_bt, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
+                .addContainerGap())
         );
-
-        chests_panel.add(jPanel1);
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Ezüst láda"));
-
-        jButton2.setText("jButton2");
-
-        jLabel2.setText("jLabel2");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(jLabel2)))
-                .addContainerGap(38, Short.MAX_VALUE))
+        main_panelLayout.setVerticalGroup(
+            main_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(main_panelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(chances_bt)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chests_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(45, 45, 45))
-        );
-
-        chests_panel.add(jPanel2);
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Bronz láda"));
-
-        jButton3.setText("jButton3");
-
-        jLabel3.setText("jLabel3");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jButton3))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(jLabel3)))
-                .addContainerGap(35, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(40, 40, 40))
-        );
-
-        chests_panel.add(jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
-                .addComponent(chests_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(main_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(133, 133, 133)
-                .addComponent(chests_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(135, 135, 135)
+                .addComponent(main_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox chances_bt;
     private javax.swing.JPanel chests_panel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel main_panel;
     // End of variables declaration//GEN-END:variables
 }

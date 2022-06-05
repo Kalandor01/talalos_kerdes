@@ -1,33 +1,37 @@
-package modell;
-
-import javax.swing.ImageIcon;
+package model;
 
 public class Chest
 {
+    private String name;
     private Materials material;
     private String material_image_path;
     private String riddle;
     private boolean lying, treasure;
     
-    public Chest(String riddle)
+    public Chest(String name, String riddle)
     {
-        this(Materials.WOOD, riddle);
+        this(name, Materials.WOOD, riddle);
     }
-    public Chest(Materials material, String riddle)
+    public Chest(String name, Materials material, String riddle)
     {
-        this(material, riddle, true);
+        this(name, material, riddle, true);
     }
-    public Chest(Materials material, String riddle, boolean lying)
+    public Chest(String name, Materials material, String riddle, boolean lying)
     {
-        this(material, riddle, lying, false);
+        this(name, material, riddle, lying, false);
     }
-    public Chest(Materials material, String riddle, boolean lying, boolean treasure)
+    public Chest(String name, Materials material, String riddle, boolean lying, boolean treasure)
     {
+        this.name = name;
         this.material = material;
         setMaterial_image();
         this.riddle = riddle;
         this.lying = lying;
         this.treasure = treasure;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Materials getMaterial() {
@@ -61,7 +65,7 @@ public class Chest
                 this.material_image_path = "imgs/silver.jpg";
                 break;
             case BRONZE:
-                this.material_image_path = "imgs/bronz.jpg";
+                this.material_image_path = "imgs/bronze.jpg";
                 break;
             default:
                 this.material_image_path = "imgs/wood.jpg";

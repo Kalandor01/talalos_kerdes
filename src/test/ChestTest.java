@@ -1,7 +1,7 @@
 package test;
 
-import modell.Chest;
-import modell.Materials;
+import model.Chest;
+import model.Materials;
 
 public class ChestTest
 {
@@ -16,7 +16,7 @@ public class ChestTest
     private void base_chest()
     {
         System.out.print("Alap láda teszt...");
-        Chest ch = new Chest("riddle");
+        Chest ch = new Chest("név", "riddle");
         assert ch.getMaterial() == Materials.WOOD;
         assert ch.isLying() == true;
         assert ch.hasTreasure() == false;
@@ -26,7 +26,7 @@ public class ChestTest
     private void advanced_chest()
     {
         System.out.print("Bonyolult láda teszt...");
-        Chest ch = new Chest(Materials.SILVER, "riddle 2", false, true);
+        Chest ch = new Chest("Név", Materials.SILVER, "riddle 2", false, true);
         assert ch.getMaterial() == Materials.SILVER;
         assert ch.getMaterial_image_path().equals("imgs/silver.jpg");
         assert ch.isLying() == false;
